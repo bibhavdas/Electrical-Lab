@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exp 2: Tungsten & Carbon Lamps</title>
+    
+    <!-- Handwriting Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <!-- MathJax for Formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --red-wire: #e74c3c;
+            --black-wire: #2c3e50;
+            --ink-color: #1a0dab; /* Dark Blue Pen */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #2c3e50;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Navigation --- */
+        .nav-bar {
+            background: #1a252f;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid #7f8c8d;
+            color: #bdc3c7;
+            padding: 10px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn.active {
+            border-color: #f1c40f;
+            color: white;
+            background: rgba(241, 196, 15, 0.2);
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+        }
+
+        /* --- Content Layout --- */
+        .main-content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-view {
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            box-sizing: border-box;
+            padding-bottom: 50px;
+        }
+
+        .page-view.active { display: block; }
+
+        /* --- NOTEBOOK STYLE --- */
+        .notebook-container {
+            background-color: #f0f0f0;
+            padding: 40px;
+            min-height: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .notebook-page {
+            width: 100%;
+            max-width: 900px;
+            background-color: #fff;
+            /* Ruled Paper lines */
+            background-image: linear-gradient(#999 1px, transparent 1px);
+            background-size: 100% 30px; 
+            position: relative;
+            padding: 40px 60px 40px 80px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            line-height: 30px;
+            color: var(--ink-color);
+        }
+
+        .notebook-page::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 60px;
+            width: 2px;
+            background-color: #e55039;
+            opacity: 0.8;
+        }
+
+        .notebook-page h2, .notebook-page h3 {
+            font-family: 'Kalam', cursive;
+            color: #000;
+            border-bottom: 2px solid #000;
+            display: inline-block;
+            margin-top: 35px;
+            margin-bottom: 5px;
+            line-height: 30px;
+        }
+        
+        .notebook-page p { margin: 0; text-align: justify; }
+
+        /* Tables */
+        .hand-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.9);
+        }
+        .hand-table th, .hand-table td {
+            border: 2px solid #333;
+            padding: 5px 10px;
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+        }
+        .hand-table th { font-weight: bold; background-color: rgba(0,0,0,0.05); }
+
+        /* Graph Section */
+        .graph-section {
+            background: white;
+            border: 2px solid #333;
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 5px;
+            width: 100%; /* Fix width issue */
+            box-sizing: border-box;
+            height: 400px; /* Force height */
+        }
+
+        /* --- SIMULATOR STYLE --- */
+        .sim-container {
+            width: 100%; height: 100%;
+            background: #bdc3c7;
+            position: relative; overflow: hidden;
+            border-top: 5px solid #34495e;
+            background-image: radial-gradient(#aab7b8 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        canvas#simCanvas {
+            position: absolute; top: 0; left: 0; z-index: 10; pointer-events: none;
+        }
+
+        .component {
+            position: absolute; background: #ecf0f1; border: 2px solid #2c3e50;
+            padding: 10px; border-radius: 6px; box-shadow: 4px 4px 10px rgba(0,0,0,0.3);
+            user-select: none; z-index: 5; text-align: center; font-family: sans-serif; font-size: 14px;
+        }
+
+        .terminal {
+            width: 16px; height: 16px; background: #2c3e50; border: 2px solid #fff; border-radius: 50%;
+            position: absolute; z-index: 20; cursor: pointer; transition: transform 0.2s;
+        }
+        .terminal:hover { transform: scale(1.4); background: #f1c40f; }
+        .terminal.active { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+
+        .sim-controls {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(44, 62, 80, 0.95); color: white;
+            padding: 15px 25px; border-radius: 12px;
+            display: flex; gap: 20px; z-index: 50; align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4); font-family: sans-serif;
+        }
+
+        .action-btn {
+            padding: 8px 16px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
+        }
+        .btn-check { background: #27ae60; color: white; }
+        .btn-auto { background: #f39c12; color: white; }
+        .btn-reset { background: #c0392b; color: white; }
+        
+        .wire-btn {
+            width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer;
+        }
+        .wire-btn.selected { transform: scale(1.2); box-shadow: 0 0 8px white; }
+
+        .led-glow { transition: background 0.1s, box-shadow 0.1s; }
+        select { padding: 5px; border-radius: 4px; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="showTab('report')">Lab Report (Notebook)</button>
+        <button class="nav-btn" onclick="showTab('simulator')">Simulator (Machine)</button>
+    </div>
+
+    <div class="main-content">
+        <!-- TAB 1: NOTEBOOK REPORT -->
+        <div id="report" class="page-view active">
+            <div class="notebook-container">
+                <div class="notebook-page">
+                    
+                    <div style="display: flex; justify-content: space-between; border: 2px solid var(--ink-color); padding: 10px; margin-bottom: 10px; border-radius: 10px;">
+                        <span><strong>Expt No:</strong> 02</span>
+                        <span><strong>Date:</strong> 28/01/26</span>
+                    </div>
+                    
+                    <h2 style="margin-top:0;">Title: Tungsten & Carbon Filament Lamp</h2>
+
+                    <h3>Objective:</h3>
+                    <p>To study the characteristic voltage-resistance-current, resistance-voltage & voltage-power of tungsten & carbon filament lamps.</p>
+
+                    <h3>Theory:</h3>
+                    <p>Resistance of any material varies with temperature. The resistance of conductor is dependent on collision processes within the wire. The resistance is expected to increase with temperature since there will be more collisions.</p>
+                    <p>For the temperature range that is not too great, this resistance variation can be represented approximately as a linear function:</p>
+                    
+                    <!-- CORRECTED MATH FORMULA USING MATHJAX -->
+                    <p style="text-align: center; font-size: 28px; margin: 10px 0;">
+                        $$ R_T = R_0 [1 + \alpha(T - T_a)] $$
+                    </p>
+                    
+                    <p>The temperature co-efficient of Tungsten and Carbon are \( +0.0045 \) & \( -0.0005 \) respectively.</p>
+
+                    <strong>Device under test:</strong>
+                    <table class="hand-table">
+                        <thead><tr><th>Sl.no</th><th>Device</th><th>Qty</th><th>Type</th><th>Range</th><th>Make</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Tungsten Filament Lamp</td><td>01</td><td>Metal</td><td>100W, 240V</td><td>Philips</td></tr>
+                            <tr><td>2</td><td>Carbon Filament Lamp</td><td>01</td><td>Non-Metal</td><td>16 CP, 240V</td><td>Philips</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Instruments Required:</h3>
+                    <table class="hand-table">
+                        <thead><tr><th>S.No</th><th>Instruments</th><th>Qty</th><th>Type</th><th>Range</th><th>Make</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td>Voltmeter</td><td>01</td><td>Digital</td><td>0-750V</td><td>CABS Electra</td></tr>
+                            <tr><td>2</td><td>Ammeter</td><td>01</td><td>Digital</td><td>0-2A</td><td>CABS Electra</td></tr>
+                            <tr><td>3</td><td>Wattmeter</td><td>01</td><td>Dynamo</td><td>0-125W</td><td>COSMO</td></tr>
+                            <tr><td>4</td><td>Variac</td><td>01</td><td>Auto</td><td>0-265V</td><td>Caltek</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Precaution:</h3>
+                    <p>1. All the meters should be taken in proper range.</p>
+                    <p>2. Before connecting the meter in the circuits check zero settings.</p>
+                    <p>3. The current, voltage are noted when values settle to a steady value.</p>
+                    <p>4. All joints should be tightly connected.</p>
+                    <p>5. Supply is switched off after the experiment is over.</p>
+
+                    <h3>Procedure:</h3>
+                    <p>1. The circuit is made as shown in the circuit diagram.</p>
+                    <p>2. With the Tungsten lamp / Carbon lamp in the circuit and the variac in zero voltage position, the supply is switched on.</p>
+                    <p>3. The applied voltage is varied using the variac and corresponding value of voltage, current and power are noted.</p>
+                    <p>4. The change of the brightness of the lamp with variation of voltage is observed.</p>
+                    <p>5. The reading of various voltages are tabulated till the rated voltage (210V) of the lamp is reached.</p>
+                    <p>6. The steps above (2-5) are repeated replacing tungsten lamp by the Carbon lamp.</p>
+
+                    <h3>Observation Table:</h3>
+                    
+                    <p><strong>Table 1: For Tungsten Filament Lamp</strong></p>
+                    <table class="hand-table">
+                        <thead><tr><th>Voltage (V)</th><th>Current (I)</th><th>Power (W)</th><th>Resistance (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td>40</td><td>0.199 A</td><td>7.96</td><td>201.005</td></tr>
+                            <tr><td>80</td><td>0.287 A</td><td>22.96</td><td>278.74</td></tr>
+                            <tr><td>120</td><td>0.358 A</td><td>42.96</td><td>335.19</td></tr>
+                            <tr><td>160</td><td>0.417 A</td><td>66.72</td><td>383.69</td></tr>
+                            <tr><td>190</td><td>0.458 A</td><td>87.02</td><td>414.84</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p><strong>Table 2: For Carbon Filament Lamp</strong></p>
+                    <table class="hand-table">
+                        <thead><tr><th>Voltage (V)</th><th>Current (I)</th><th>Power (W)</th><th>Resistance (R)</th></tr></thead>
+                        <tbody>
+                            <tr><td>80</td><td>0.093 A</td><td>7.44</td><td>860.21</td></tr>
+                            <tr><td>120</td><td>0.155 A</td><td>18.6</td><td>774.19</td></tr>
+                            <tr><td>160</td><td>0.225 A</td><td>36.0</td><td>711.11</td></tr>
+                            <tr><td>190</td><td>0.284 A</td><td>53.96</td><td>669.01</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Graphs</h3>
+                    <p>Comparison of Characteristics:</p>
+                    
+                    <div class="graph-section">
+                        <canvas id="graphVI"></canvas>
+                    </div>
+                    
+                    <div class="graph-section">
+                        <canvas id="graphVR"></canvas>
+                    </div>
+                    
+                    <div class="graph-section">
+                        <canvas id="graphVP"></canvas>
+                    </div>
+
+                    <h3>Conclusion:</h3>
+                    <p>From the graphs and observation table, we conclude that:</p>
+                    <p>1. For the <strong>Tungsten Lamp</strong> (Metal), the resistance <strong>increases</strong> as the voltage (and temperature) increases. This indicates a Positive Temperature Coefficient (PTC).</p>
+                    <p>2. For the <strong>Carbon Lamp</strong> (Non-metal/Semiconductor), the resistance <strong>decreases</strong> as the voltage increases. This indicates a Negative Temperature Coefficient (NTC).</p>
+
+                    <p>&nbsp;</p>
+                    <p style="text-align: right; margin-top: 50px;">Teacher's Signature: __________________</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: SIMULATOR -->
+        <div id="simulator" class="page-view">
+            <div class="sim-container" id="simContainer">
+                
+                <canvas id="simCanvas"></canvas>
+
+                <!-- VARIAC -->
+                <div class="component" style="width: 150px; height: 180px; top: 100px; left: 50px;">
+                    <strong>VARIAC</strong><br>
+                    <div style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid #7f8c8d; margin: 10px auto; position: relative; background: #95a5a6;">
+                        <div id="knob" style="width: 6px; height: 40px; background: #2c3e50; position: absolute; left: 37px; top: 20px; transform: rotate(-140deg); transform-origin: center 20px; transition: transform 0.1s;"></div>
+                    </div>
+                    <span>0 - 260V</span>
+                    <div class="terminal" id="t_src_p" style="bottom: 10px; left: 30px;" title="Phase"></div>
+                    <div class="terminal" id="t_src_n" style="bottom: 10px; right: 30px;" title="Neutral"></div>
+                    <div style="position: absolute; bottom: -20px; left: 30px; font-weight: bold;">P</div>
+                    <div style="position: absolute; bottom: -20px; right: 30px; font-weight: bold;">N</div>
+                </div>
+
+                <!-- AMMETER -->
+                <div class="component" style="width: 100px; height: 100px; top: 50px; left: 300px; border-radius: 50%;">
+                    <div style="margin-top: 20px; font-weight: bold; font-size: 20px;">A</div>
+                    <div class="terminal" id="t_amm_in" style="top: 50%; left: -8px; transform: translateY(-50%);"></div>
+                    <div class="terminal" id="t_amm_out" style="top: 50%; right: -8px; transform: translateY(-50%);"></div>
+                </div>
+
+                <!-- WATTMETER -->
+                <div class="component" style="width: 140px; height: 140px; top: 50px; left: 500px;">
+                    <strong>WATTMETER</strong>
+                    <div style="display: flex; justify-content: space-between; margin-top: 60px; padding: 0 10px;">
+                        <div style="position: relative;"><div class="terminal" id="t_watt_m"></div><br><span>M</span></div>
+                        <div style="position: relative;"><div class="terminal" id="t_watt_l"></div><br><span>L</span></div>
+                        <div style="position: relative;"><div class="terminal" id="t_watt_c"></div><br><span>C</span></div>
+                        <div style="position: relative;"><div class="terminal" id="t_watt_v"></div><br><span>V</span></div>
+                    </div>
+                </div>
+
+                <!-- VOLTMETER -->
+                <div class="component" style="width: 100px; height: 100px; top: 250px; left: 650px; border-radius: 50%;">
+                    <div style="margin-top: 20px; font-weight: bold; font-size: 20px;">V</div>
+                    <div class="terminal" id="t_volt_p" style="top: -8px; left: 50%; transform: translateX(-50%);"></div>
+                    <div class="terminal" id="t_volt_n" style="bottom: -8px; left: 50%; transform: translateX(-50%);"></div>
+                </div>
+
+                <!-- LAMP (Dynamic) -->
+                <div class="component" style="width: 140px; height: 180px; top: 200px; left: 850px; display: flex; flex-direction: column; align-items: center;">
+                    <div id="lamp-bulb" class="led-glow" style="width: 60px; height: 60px; background: #bdc3c7; border-radius: 50%; border: 1px solid #7f8c8d; margin-top: 10px;"></div>
+                    <strong id="lamp-label">Tungsten Lamp</strong>
+                    <div style="display: flex; gap: 40px; margin-top: 20px;">
+                        <div style="position: relative;"><div class="terminal" id="t_lamp_p"></div><span>+</span></div>
+                        <div style="position: relative;"><div class="terminal" id="t_lamp_n"></div><span>-</span></div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="sim-controls">
+                    <div>
+                        <button class="wire-btn selected" style="background: var(--red-wire);" onclick="setWireColor('red', this)"></button>
+                        <button class="wire-btn" style="background: var(--black-wire);" onclick="setWireColor('black', this)"></button>
+                    </div>
+                    <div style="width: 1px; height: 30px; background: #7f8c8d;"></div>
+                    
+                    <div>
+                        <label style="color: #bdc3c7; font-size: 12px;">LAMP TYPE:</label><br>
+                        <select id="lampSelector" onchange="changeLampType()">
+                            <option value="tungsten">Tungsten</option>
+                            <option value="carbon">Carbon</option>
+                        </select>
+                    </div>
+
+                    <div style="width: 1px; height: 30px; background: #7f8c8d;"></div>
+                    
+                    <div>
+                        <label>Variac:</label>
+                        <input type="range" id="variacSlider" min="0" max="220" value="0" style="width: 100px;" disabled oninput="updateMachine()">
+                        <span id="voltDisplay" style="font-family: monospace; width: 40px; display:inline-block;">0 V</span>
+                    </div>
+
+                    <div style="width: 1px; height: 30px; background: #7f8c8d;"></div>
+                    
+                    <button class="action-btn btn-check" onclick="checkCircuit()">Power ON</button>
+                    <button class="action-btn btn-auto" onclick="autoConnect()">Auto Connect</button>
+                    <button class="action-btn btn-reset" onclick="resetWires()">Reset</button>
+                    
+                    <div id="statusText" style="color: #ecf0f1; font-size: 12px;">Connect Wires...</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<script>
+    // --- GRAPHS ---
+    const vTungsten = [40, 80, 120, 160, 190];
+    const rTungsten = [201.0, 278.7, 335.2, 383.7, 414.8];
+    const iTungsten = [0.199, 0.287, 0.358, 0.417, 0.458];
+    const pTungsten = [7.96, 22.96, 42.96, 66.72, 87.02];
+
+    const vCarbon = [80, 120, 160, 190];
+    const rCarbon = [860.2, 774.2, 711.1, 669.0];
+    const iCarbon = [0.093, 0.155, 0.225, 0.284];
+    const pCarbon = [7.44, 18.6, 36.0, 53.96];
+
+    // UPDATED CONFIG: USE LINEAR X-AXIS TO FIX SQUASHED GRAPHS
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { 
+            legend: { labels: { font: { family: 'Caveat', size: 16 } } }, 
+            title: { display: true, font: { family: 'Caveat', size: 20 } } 
+        },
+        scales: { 
+            x: { 
+                type: 'linear', // CRITICAL FIX: Treats X as a ruler, not a list of names
+                title: { display: true, text: 'Voltage (V)' },
+                min: 0,
+                max: 200
+            }, 
+            y: { title: { display: true } } 
+        }
+    };
+
+    // Voltage vs Current
+    new Chart(document.getElementById('graphVI'), {
+        type: 'line',
+        data: {
+            datasets: [
+                { label: 'Tungsten (I)', data: vTungsten.map((v,i) => ({x:v, y:iTungsten[i]})), borderColor: '#f1c40f', tension: 0.3, pointRadius: 5 },
+                { label: 'Carbon (I)', data: vCarbon.map((v,i) => ({x:v, y:iCarbon[i]})), borderColor: '#e67e22', tension: 0.3, pointRadius: 5 }
+            ]
+        },
+        options: { ...commonOptions, plugins: { title: { text: 'Voltage vs Current', display: true } }, scales: { ...commonOptions.scales, y: { title: { display: true, text: 'Current (A)' } } } }
+    });
+
+    // Voltage vs Resistance
+    new Chart(document.getElementById('graphVR'), {
+        type: 'line',
+        data: {
+            datasets: [
+                { label: 'Tungsten (R)', data: vTungsten.map((v,i) => ({x:v, y:rTungsten[i]})), borderColor: '#f1c40f', tension: 0.3, pointRadius: 5 },
+                { label: 'Carbon (R)', data: vCarbon.map((v,i) => ({x:v, y:rCarbon[i]})), borderColor: '#e67e22', tension: 0.3, pointRadius: 5 }
+            ]
+        },
+        options: { ...commonOptions, plugins: { title: { text: 'Voltage vs Resistance', display: true } }, scales: { ...commonOptions.scales, y: { title: { display: true, text: 'Resistance (Ω)' } } } }
+    });
+
+    // Voltage vs Power
+    new Chart(document.getElementById('graphVP'), {
+        type: 'line',
+        data: {
+            datasets: [
+                { label: 'Tungsten (P)', data: vTungsten.map((v,i) => ({x:v, y:pTungsten[i]})), borderColor: '#f1c40f', tension: 0.3, pointRadius: 5 },
+                { label: 'Carbon (P)', data: vCarbon.map((v,i) => ({x:v, y:pCarbon[i]})), borderColor: '#e67e22', tension: 0.3, pointRadius: 5 }
+            ]
+        },
+        options: { ...commonOptions, plugins: { title: { text: 'Voltage vs Power', display: true } }, scales: { ...commonOptions.scales, y: { title: { display: true, text: 'Power (W)' } } } }
+    });
+
+    // --- LOGIC ---
+    function showTab(id) {
+        document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        const btnIdx = id === 'report' ? 0 : 1;
+        document.querySelectorAll('.nav-btn')[btnIdx].classList.add('active');
+        if(id === 'simulator') { resizeCanvas(); }
+    }
+
+    // --- SIMULATOR ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.getElementById('simContainer');
+    let wires = []; 
+    let isDrawing = false, startTerminal = null;
+    let currentMouseX = 0, currentMouseY = 0;
+    let currentColor = '#e74c3c';
+    let isPowered = false;
+    let lampType = 'tungsten';
+
+    function changeLampType() {
+        if(isPowered) { alert("Please Reset or Power Off before changing lamp."); return; }
+        lampType = document.getElementById('lampSelector').value;
+        document.getElementById('lamp-label').innerText = lampType.charAt(0).toUpperCase() + lampType.slice(1) + " Lamp";
+    }
+
+    function resizeCanvas() {
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+        redraw();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function setWireColor(color, btn) {
+        currentColor = color === 'red' ? '#e74c3c' : '#2c3e50';
+        document.querySelectorAll('.wire-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+
+    document.querySelectorAll('.terminal').forEach(term => {
+        term.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+            if(isPowered) { alert("Reset wires before modifying."); return; }
+            const rect = term.getBoundingClientRect();
+            const contRect = container.getBoundingClientRect();
+            startTerminal = {
+                id: term.id,
+                x: rect.left - contRect.left + rect.width/2,
+                y: rect.top - contRect.top + rect.height/2
+            };
+            isDrawing = true;
+            term.classList.add('active');
+        });
+
+        term.addEventListener('mouseup', (e) => {
+            if(isDrawing && startTerminal) {
+                const rect = term.getBoundingClientRect();
+                const contRect = container.getBoundingClientRect();
+                if(term.id !== startTerminal.id) {
+                    wires.push({
+                        from: startTerminal.id, to: term.id,
+                        x1: startTerminal.x, y1: startTerminal.y,
+                        x2: rect.left - contRect.left + rect.width/2,
+                        y2: rect.top - contRect.top + rect.height/2,
+                        color: currentColor
+                    });
+                    document.getElementById('statusText').innerText = "Wire Connected.";
+                }
+            }
+            stopDrawing();
+        });
+    });
+
+    container.addEventListener('mousemove', (e) => {
+        if(isDrawing) {
+            const rect = container.getBoundingClientRect();
+            currentMouseX = e.clientX - rect.left;
+            currentMouseY = e.clientY - rect.top;
+            redraw();
+        }
+    });
+    container.addEventListener('mouseup', () => { if(isDrawing) stopDrawing(); });
+
+    function stopDrawing() {
+        isDrawing = false;
+        startTerminal = null;
+        document.querySelectorAll('.terminal').forEach(t => t.classList.remove('active'));
+        redraw();
+    }
+
+    function redraw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineCap = 'round'; ctx.lineWidth = 4;
+        wires.forEach(w => {
+            ctx.beginPath(); ctx.strokeStyle = w.color;
+            ctx.moveTo(w.x1, w.y1);
+            ctx.bezierCurveTo(w.x1, w.y1 + 40, w.x2, w.y2 + 40, w.x2, w.y2);
+            ctx.stroke();
+        });
+        if(isDrawing && startTerminal) {
+            ctx.beginPath(); ctx.strokeStyle = currentColor;
+            ctx.moveTo(startTerminal.x, startTerminal.y);
+            ctx.lineTo(currentMouseX, currentMouseY);
+            ctx.stroke();
+        }
+    }
+
+    function resetWires() {
+        wires = []; isPowered = false;
+        document.getElementById('variacSlider').disabled = true;
+        document.getElementById('variacSlider').value = 0;
+        updateMachine();
+        document.getElementById('statusText').innerText = "Wires Removed.";
+        document.getElementById('statusText').style.color = "white";
+        redraw();
+    }
+
+    function autoConnect() {
+        resetWires();
+        const connections = [
+            ['t_src_p', 't_amm_in', 'red'], ['t_amm_out', 't_watt_m', 'red'],
+            ['t_watt_m', 't_watt_c', 'red'], ['t_watt_l', 't_lamp_p', 'red'],
+            ['t_lamp_n', 't_watt_v', 'black'], ['t_watt_v', 't_src_n', 'black'],
+            ['t_volt_p', 't_lamp_p', 'red'], ['t_volt_n', 't_lamp_n', 'black']
+        ];
+        const contRect = container.getBoundingClientRect();
+        connections.forEach(conn => {
+            const el1 = document.getElementById(conn[0]).getBoundingClientRect();
+            const el2 = document.getElementById(conn[1]).getBoundingClientRect();
+            wires.push({
+                from: conn[0], to: conn[1],
+                x1: el1.left - contRect.left + el1.width/2, y1: el1.top - contRect.top + el1.height/2,
+                x2: el2.left - contRect.left + el2.width/2, y2: el2.top - contRect.top + el2.height/2,
+                color: conn[2] === 'red' ? '#e74c3c' : '#2c3e50'
+            });
+        });
+        redraw();
+        document.getElementById('statusText').innerText = "Auto-Connected.";
+        document.getElementById('statusText').style.color = "#f1c40f";
+    }
+
+    function checkCircuit() {
+        const adj = {};
+        const allIds = ['t_src_p','t_src_n','t_amm_in','t_amm_out','t_watt_m','t_watt_l','t_watt_c','t_watt_v','t_lamp_p','t_lamp_n','t_volt_p','t_volt_n'];
+        allIds.forEach(id => adj[id] = []);
+        wires.forEach(w => { adj[w.from].push(w.to); adj[w.to].push(w.from); });
+
+        // Internal paths
+        adj['t_amm_in'].push('t_amm_out'); adj['t_amm_out'].push('t_amm_in');
+        adj['t_watt_m'].push('t_watt_l'); adj['t_watt_l'].push('t_watt_m');
+
+        function isConnected(start, end, visited=new Set()) {
+            if(start === end) return true;
+            visited.add(start);
+            for(let neighbor of adj[start]) {
+                if(!visited.has(neighbor)) {
+                    if(isConnected(neighbor, end, visited)) return true;
+                }
+            }
+            return false;
+        }
+
+        if (isConnected('t_src_p', 't_src_n')) {
+            setStatus("SHORT CIRCUIT DETECTED!", "#e74c3c");
+            alert("SHORT CIRCUIT! Check Connections.");
+            return;
+        }
+
+        const pReach = isConnected('t_src_p', 't_lamp_p');
+        const nReach = isConnected('t_src_n', 't_lamp_n');
+        const wattJumper = isConnected('t_watt_m', 't_watt_c');
+        
+        // Bypass Check
+        const adjBackup = [...adj['t_amm_in']]; 
+        adj['t_amm_in'] = adj['t_amm_in'].filter(x => x !== 't_amm_out');
+        adj['t_amm_out'] = adj['t_amm_out'].filter(x => x !== 't_amm_in');
+        const bypassCheck = isConnected('t_src_p', 't_lamp_p'); 
+        adj['t_amm_in'] = adj['t_amm_in'].concat(['t_amm_out']); 
+        adj['t_amm_out'] = adj['t_amm_out'].concat(['t_amm_in']);
+
+        if(!pReach || !nReach) {
+            setStatus("Circuit Open.", "#e67e22");
+        } else if (bypassCheck) {
+            setStatus("Ammeter Bypassed.", "#e67e22");
+            alert("Current not flowing THROUGH Ammeter.");
+        } else if (!wattJumper) {
+            setStatus("Wattmeter Jumper Missing.", "#e67e22");
+        } else {
+            isPowered = true;
+            document.getElementById('variacSlider').disabled = false;
+            setStatus("Powered ON.", "#27ae60");
+        }
+    }
+
+    function setStatus(msg, color) {
+        const el = document.getElementById('statusText');
+        el.innerText = msg; el.style.color = color;
+    }
+
+    function updateMachine() {
+        if(!isPowered) return;
+        const val = parseInt(document.getElementById('variacSlider').value);
+        document.getElementById('voltDisplay').innerText = val + " V";
+        document.getElementById('knob').style.transform = `rotate(${-140 + (val * 1.27)}deg)`;
+        
+        const lamp = document.getElementById('lamp-bulb');
+        if(val > 20) {
+            let intensity = Math.min((val - 20) / 200, 1);
+            if(lampType === 'tungsten') {
+                // Bright White/Yellow
+                lamp.style.background = `rgba(255, 255, 200, ${0.1 + intensity})`;
+                lamp.style.boxShadow = `0 0 ${intensity * 50}px rgba(255, 255, 200, 0.9)`;
+            } else {
+                // Dim Orange (Carbon)
+                lamp.style.background = `rgba(255, 140, 0, ${0.1 + (intensity*0.7)})`;
+                lamp.style.boxShadow = `0 0 ${intensity * 30}px rgba(255, 100, 0, 0.8)`;
+            }
+        } else {
+            lamp.style.background = "#bdc3c7"; lamp.style.boxShadow = "none";
+        }
+    }
+</script>
+</body>
+</html>
