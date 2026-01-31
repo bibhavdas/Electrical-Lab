@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Lab Portal</title>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #34495e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        header {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 { margin: 0; font-weight: 300; letter-spacing: 2px; }
+        .subtitle { color: #bdc3c7; font-size: 0.9rem; margin-top: 10px; }
+
+        /* --- Tabs --- */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            padding: 5px;
+            margin: -25px auto 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            border: none;
+            background: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .tab-btn i { font-size: 1.1rem; }
+
+        /* --- Content Grid --- */
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            display: none; /* Hidden by default */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding-bottom: 50px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .container.active { display: grid; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Experiment Cards --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            position: relative;
+        }
+
+        .bg-exp1 { background: linear-gradient(135deg, #f1c40f, #f39c12); } /* Yellow/Orange */
+        .bg-exp2 { background: linear-gradient(135deg, #e74c3c, #c0392b); } /* Red */
+        
+        .bg-pdf { background: linear-gradient(135deg, #95a5a6, #7f8c8d); } /* Grey for PDFs */
+
+        .card-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+        
+        .exp-number {
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            color: #95a5a6;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .exp-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: var(--primary);
+        }
+
+        .exp-desc {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fa-solid fa-bolt"></i> Electrical Lab Portal</h1>
+        <div class="subtitle">Virtual & Raw Experiment Archives</div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('digital')">
+            <i class="fa-solid fa-laptop-code"></i> Digital Experiments
+        </button>
+        <button class="tab-btn" onclick="switchTab('raw')">
+            <i class="fa-regular fa-file-pdf"></i> Raw (PDF)
+        </button>
+    </div>
+
+    <!-- TAB 1: DIGITAL EXPERIMENTS -->
+    <div id="digital" class="container active">
+        
+        <!-- Exp 1 Link -->
+        <a href="index.html" class="card">
+            <div class="card-header bg-exp1">
+                <i class="fa-regular fa-lightbulb"></i>
+            </div>
+            <div class="card-body">
+                <div class="exp-number">Experiment 01</div>
+                <h3 class="exp-title">LED Characteristics</h3>
+                <p class="exp-desc">Study the voltage-resistance characteristic of an LED Lamp using interactive graphs and circuit simulator.</p>
+                <div class="card-footer">
+                    <span>Open Interactive Lab</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+        </a>
+
+        <!-- Exp 2 Link -->
+        <a href="experiment 2.html" class="card">
+            <div class="card-header bg-exp2">
+                <i class="fa-solid fa-fire-burner"></i>
+            </div>
+            <div class="card-body">
+                <div class="exp-number">Experiment 02</div>
+                <h3 class="exp-title">Tungsten & Carbon Lamps</h3>
+                <p class="exp-desc">Compare PTC and NTC resistance behaviors of Tungsten and Carbon filaments with virtual machine.</p>
+                <div class="card-footer">
+                    <span>Open Interactive Lab</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- TAB 2: RAW (PDF) EXPERIMENTS -->
+    <div id="raw" class="container">
+        
+        <!-- Exp 1 PDF -->
+        <!-- Note: Ensure you have a file named 'exp1.pdf' in the folder, or change href below -->
+        <a href="exp1.pdf" target="_blank" class="card">
+            <div class="card-header bg-pdf">
+                <i class="fa-solid fa-file-contract"></i>
+            </div>
+            <div class="card-body">
+                <div class="exp-number">Experiment 01</div>
+                <h3 class="exp-title">LED Lamp (Raw Scan)</h3>
+                <p class="exp-desc">Original handwritten lab manual scan for reference and verification.</p>
+                <div class="card-footer">
+                    <span>View PDF</span>
+                    <i class="fa-solid fa-download"></i>
+                </div>
+            </div>
+        </a>
+
+        <!-- Exp 2 PDF -->
+        <!-- Note: Ensure you have a file named 'exp2.pdf' in the folder, or change href below -->
+        <a href="exp2.pdf" target="_blank" class="card">
+            <div class="card-header bg-pdf">
+                <i class="fa-solid fa-file-contract"></i>
+            </div>
+            <div class="card-body">
+                <div class="exp-number">Experiment 02</div>
+                <h3 class="exp-title">Filament Lamps (Raw Scan)</h3>
+                <p class="exp-desc">Original handwritten lab manual scan for Tungsten and Carbon lamp experiment.</p>
+                <div class="card-footer">
+                    <span>View PDF</span>
+                    <i class="fa-solid fa-download"></i>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all containers
+            document.querySelectorAll('.container').forEach(el => el.classList.remove('active'));
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            // Show selected container
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activate selected button
+            // Find the button that called this function based on onclick attribute text match
+            const btns = document.querySelectorAll('.tab-btn');
+            if(tabName === 'digital') btns[0].classList.add('active');
+            if(tabName === 'raw') btns[1].classList.add('active');
+        }
+    </script>
+</body>
+</html>
