@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLC Series Circuit - Lab Report</title>
+    
+    <!-- Load handwritten font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Load Chart.js for the graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #d8d8d8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Notebook Paper Styling */
+        .notebook-page {
+            width: 100%;
+            max-width: 850px;
+            background-color: #fdfdfd;
+            /* Create ruled lines and red margin */
+            background-image: 
+                linear-gradient(90deg, transparent 79px, #ff8c8c 79px, #ff8c8c 81px, transparent 81px),
+                linear-gradient(#e0e0e0 1px, transparent 1px);
+            background-size: 100% 32px;
+            box-shadow: 2px 4px 15px rgba(0,0,0,0.2);
+            border-radius: 2px;
+            margin-bottom: 40px;
+            
+            /* Text Styling */
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            color: #1a2a40; /* Dark pen ink */
+            line-height: 32px; /* Must match background-size height to align text */
+            padding: 32px 40px 40px 100px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Elements inside notebook */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin: 0 0 16px 0;
+            text-decoration: underline;
+            text-decoration-style: dashed;
+            letter-spacing: 1px;
+        }
+
+        p, ul, ol {
+            margin: 0 0 16px 0;
+            padding: 0;
+        }
+
+        ul, ol {
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 0px;
+        }
+
+        .section-title {
+            text-decoration: underline;
+            margin-right: 5px;
+            font-weight: 600;
+        }
+
+        .math-block {
+            margin-left: 20px;
+        }
+
+        /* Hand-drawn style tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #1a2a40;
+            padding: 2px 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        th {
+            font-weight: 700;
+        }
+
+        .table-title {
+            text-decoration: underline;
+            margin-bottom: 5px;
+        }
+
+        .signature {
+            float: right;
+            margin-top: 20px;
+            margin-right: 50px;
+        }
+
+        /* Graph Section Styling */
+        .graph-section {
+            width: 100%;
+            max-width: 850px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            font-family: Arial, sans-serif; /* Standard font for graph area */
+        }
+        
+        .graph-section h2 {
+            font-family: 'Caveat', cursive;
+            font-size: 32px;
+            text-align: center;
+            color: #1a2a40;
+            margin-top: 0;
+        }
+
+        @media (max-width: 600px) {
+            .notebook-page {
+                padding: 20px 20px 20px 60px;
+                background-image: 
+                    linear-gradient(90deg, transparent 49px, #ff8c8c 49px, #ff8c8c 51px, transparent 51px),
+                    linear-gradient(#e0e0e0 1px, transparent 1px);
+            }
+            h1 { font-size: 28px; }
+            th, td { font-size: 20px; padding: 2px 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Notebook Page 1 -->
+    <div class="notebook-page">
+        <h1>Study of R-L-C series circuit</h1>
+
+        <p><span class="section-title">Objective:</span> To measure the voltage drop of the individual components, total circuit current and power factor of R L C series circuit.</p>
+
+        <p><span class="section-title">Theory:</span> The three are shown in figure joined in series across an A.C. supply of rms voltage V.</p>
+        
+        <div class="math-block">
+            Let<br>
+            VR = I * R = voltage drop across R.<br>
+            VL = I * X_L = Voltage drop across L, X_L = 2πfL.<br>
+            VC = I * X_C = Voltage drop across C, X_C = 1 / 2πfC.<br>
+            Its phase angle is ø = tan -1[(X_L - X_C)/R].
+        </div>
+
+        <div class="table-title">Components under test:</div>
+        <table>
+            <tr>
+                <th>Sl.no</th>
+                <th>Components under test</th>
+                <th>Qty</th>
+                <th>Type</th>
+                <th>Range</th>
+                <th>Make</th>
+            </tr>
+            <tr>
+                <td>1.</td>
+                <td>R (Resistor)</td>
+                <td>1</td>
+                <td>Resistive</td>
+                <td>28.66</td>
+                <td>CALTEK</td>
+            </tr>
+            <tr>
+                <td>2.</td>
+                <td>L (Inductor)</td>
+                <td>1</td>
+                <td>Inductive</td>
+                <td>11</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3.</td>
+                <td>C (Capacitor)</td>
+                <td>1</td>
+                <td>Capacitive</td>
+                <td>50.33</td>
+                <td></td>
+            </tr>
+        </table>
+
+        <div class="table-title">Instruments Required:</div>
+        <table>
+            <tr>
+                <th>Sl.no</th>
+                <th>Instruments Required</th>
+                <th>Qty</th>
+                <th>Type</th>
+                <th>Range</th>
+                <th>Make</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Voltmeter</td>
+                <td>3</td>
+                <td>Digital</td>
+                <td>0-740V</td>
+                <td>Cabs Electron</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Ammeter</td>
+                <td>1</td>
+                <td>Digital</td>
+                <td>0-2Amp</td>
+                <td>Cabs Electron</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Variac</td>
+                <td>1</td>
+                <td>Auto Transformer</td>
+                <td>0-230V</td>
+                <td>Caltek</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Notebook Page 2 -->
+    <div class="notebook-page">
+        <div class="table-title">Procedure:</div>
+        <ol>
+            <li>The circuit is made in the circuit diagram.</li>
+            <li>The variac should be kept in zero voltage position, the AC supply is switched ON.</li>
+            <li>The applied voltage is varied using the variac & corresponding value of current and voltage are noted.</li>
+            <li>The readings of various voltages are tabulated till rated voltage (210V) of components is reached.</li>
+        </ol>
+
+        <div class="table-title">Circuit Diagram:</div>
+        <!-- Hand-drawn SVG Circuit Diagram -->
+        <svg viewBox="0 0 700 280" style="width: 100%; max-width: 700px; margin: 10px auto 20px auto; display: block;" xmlns="http://www.w3.org/2000/svg">
+            <style>
+                .ink { stroke: #1a2a40; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+                .ink-thick { stroke: #1a2a40; stroke-width: 2.5; fill: none; stroke-linecap: round; }
+                .ink-text { font-family: 'Arial', sans-serif; font-size: 14px; fill: #1a2a40; font-weight: bold; }
+                .ink-text-small { font-family: 'Arial', sans-serif; font-size: 11px; fill: #1a2a40; font-weight: bold; }
+                .ink-circle { fill: #fdfdfd; stroke: #1a2a40; stroke-width: 1.5; }
+                .ink-dot { fill: #1a2a40; }
+            </style>
+
+            <!-- Terminals -->
+            <circle cx="60" cy="80" r="4" class="ink" fill="#fdfdfd"/>
+            <text x="45" y="85" class="ink-text" text-anchor="end">L</text>
+            
+            <circle cx="60" cy="220" r="4" class="ink" fill="#fdfdfd"/>
+            <text x="45" y="225" class="ink-text" text-anchor="end">N</text>
+
+            <!-- Supply Text -->
+            <text x="50" y="130" class="ink-text-small" text-anchor="middle">220V A.C</text>
+            <text x="50" y="145" class="ink-text-small" text-anchor="middle">1-PHASE</text>
+            <text x="50" y="160" class="ink-text-small" text-anchor="middle">50HZ</text>
+            <text x="50" y="175" class="ink-text-small" text-anchor="middle">SUPPLY</text>
+            <line x1="25" y1="180" x2="75" y2="180" class="ink" />
+
+            <!-- Switch -->
+            <line x1="64" y1="80" x2="90" y2="80" class="ink" />
+            <line x1="64" y1="220" x2="90" y2="220" class="ink" />
+            
+            <circle cx="94" cy="80" r="4" class="ink" fill="#fdfdfd"/>
+            <circle cx="94" cy="220" r="4" class="ink" fill="#fdfdfd"/>
+            
+            <line x1="94" y1="80" x2="115" y2="60" class="ink-thick" />
+            <line x1="94" y1="220" x2="115" y2="200" class="ink-thick" />
+            
+            <line x1="104" y1="70" x2="104" y2="210" class="ink" stroke-dasharray="4,4" />
+            <text x="130" y="150" class="ink-text-small" transform="rotate(-90 130 150)" text-anchor="middle">I.C.D.P SW.</text>
+
+            <circle cx="120" cy="80" r="4" class="ink" fill="#fdfdfd"/>
+            <circle cx="120" cy="220" r="4" class="ink" fill="#fdfdfd"/>
+
+            <line x1="124" y1="80" x2="170" y2="80" class="ink" />
+            <line x1="124" y1="220" x2="170" y2="220" class="ink" />
+            
+            <!-- Variac -->
+            <path d="M 170 80 
+                     C 140 80, 140 100, 170 100 
+                     C 140 100, 140 120, 170 120 
+                     C 140 120, 140 140, 170 140 
+                     C 140 140, 140 160, 170 160 
+                     C 140 160, 140 180, 170 180 
+                     C 140 180, 140 200, 170 200
+                     C 140 200, 140 220, 170 220" class="ink" />
+            <text x="195" y="150" class="ink-text-small" transform="rotate(-90 195 150)" text-anchor="middle">VARIAC</text>
+
+            <!-- Tap -->
+            <line x1="170" y1="150" x2="220" y2="150" class="ink" />
+            <polygon points="170,150 178,146 178,154" class="ink" fill="#1a2a40" />
+
+            <!-- Neutral line -->
+            <line x1="170" y1="220" x2="650" y2="220" class="ink" />
+            
+            <!-- Main Voltmeter -->
+            <circle cx="220" cy="150" r="2" class="ink-dot" />
+            <line x1="220" y1="150" x2="220" y2="171" class="ink" />
+            <circle cx="220" cy="185" r="14" class="ink-circle" />
+            <text x="220" y="190" class="ink-text" text-anchor="middle">V</text>
+            <line x1="220" y1="199" x2="220" y2="220" class="ink" />
+            <circle cx="220" cy="220" r="2" class="ink-dot" />
+
+            <!-- Ammeter -->
+            <line x1="220" y1="150" x2="256" y2="150" class="ink" />
+            <circle cx="270" cy="150" r="14" class="ink-circle" />
+            <text x="270" y="155" class="ink-text" text-anchor="middle">A</text>
+            <line x1="284" y1="150" x2="330" y2="150" class="ink" />
+
+            <!-- R -->
+            <path d="M 330 150 L 335 140 L 345 160 L 355 140 L 365 160 L 375 140 L 380 150" class="ink" />
+            <line x1="380" y1="150" x2="420" y2="150" class="ink" />
+            <text x="355" y="180" class="ink-text" text-anchor="middle">R</text>
+
+            <!-- L -->
+            <path d="M 420 150 
+                     C 422 135, 432 135, 432 150
+                     C 432 135, 442 135, 442 150
+                     C 442 135, 452 135, 452 150
+                     C 452 135, 462 135, 462 150" class="ink" />
+            <line x1="462" y1="150" x2="510" y2="150" class="ink" />
+            <text x="441" y="180" class="ink-text" text-anchor="middle">L</text>
+
+            <!-- C -->
+            <line x1="510" y1="150" x2="535" y2="150" class="ink" />
+            <line x1="535" y1="135" x2="535" y2="165" class="ink-thick" />
+            <line x1="545" y1="135" x2="545" y2="165" class="ink-thick" />
+            <line x1="545" y1="150" x2="650" y2="150" class="ink" />
+            <text x="540" y="180" class="ink-text" text-anchor="middle">C</text>
+            
+            <line x1="650" y1="150" x2="650" y2="220" class="ink" />
+
+            <!-- VR -->
+            <circle cx="310" cy="150" r="2" class="ink-dot" />
+            <circle cx="400" cy="150" r="2" class="ink-dot" />
+            <line x1="310" y1="150" x2="310" y2="90" class="ink" />
+            <line x1="310" y1="90" x2="341" y2="90" class="ink" />
+            <circle cx="355" cy="90" r="14" class="ink-circle" />
+            <text x="355" y="95" class="ink-text" text-anchor="middle">V</text>
+            <line x1="369" y1="90" x2="400" y2="90" class="ink" />
+            <line x1="400" y1="90" x2="400" y2="150" class="ink" />
+
+            <!-- VL -->
+            <circle cx="410" cy="150" r="2" class="ink-dot" />
+            <circle cx="480" cy="150" r="2" class="ink-dot" />
+            <line x1="410" y1="150" x2="410" y2="90" class="ink" />
+            <line x1="410" y1="90" x2="431" y2="90" class="ink" />
+            <circle cx="445" cy="90" r="14" class="ink-circle" />
+            <text x="445" y="95" class="ink-text" text-anchor="middle">V</text>
+            <line x1="459" y1="90" x2="480" y2="90" class="ink" />
+            <line x1="480" y1="90" x2="480" y2="150" class="ink" />
+
+            <!-- VC -->
+            <circle cx="500" cy="150" r="2" class="ink-dot" />
+            <circle cx="570" cy="150" r="2" class="ink-dot" />
+            <line x1="500" y1="150" x2="500" y2="90" class="ink" />
+            <line x1="500" y1="90" x2="521" y2="90" class="ink" />
+            <circle cx="535" cy="90" r="14" class="ink-circle" />
+            <text x="535" y="95" class="ink-text" text-anchor="middle">V</text>
+            <line x1="549" y1="90" x2="570" y2="90" class="ink" />
+            <line x1="570" y1="90" x2="570" y2="150" class="ink" />
+        </svg>
+
+        <div class="table-title" style="margin-top: 10px;">Precaution:</div>
+        <ol style="list-style-type: none; padding-left: 10px;">
+            <li>1) All the meters should be taken in proper range.</li>
+            <li>2) Before connecting the meter in the circuits check zero settings.</li>
+            <li>3) The current, voltage are noted when values settle to a steady value.</li>
+            <li>4) All joints should be tightly connected.</li>
+            <li>5) Voltage should not exceed 210 V.</li>
+            <li>6) The supply is switched off after experiment is over.</li>
+        </ol>
+
+        <div class="table-title" style="margin-top: 10px;">Observation Table</div>
+        <table>
+            <tr>
+                <th>Sl.No</th>
+                <th>Supply Voltage</th>
+                <th>Current</th>
+                <th>Voltage Across<br>Resistor (VR)</th>
+                <th>Volt across<br>Inductor(VL)</th>
+                <th>Voltage across<br>Capacitor(vc)</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>52.0</td>
+                <td>0.164 A</td>
+                <td>23</td>
+                <td>7</td>
+                <td>41</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>60.0</td>
+                <td>0.189 A</td>
+                <td>27</td>
+                <td>10</td>
+                <td>47</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>80.0</td>
+                <td>0.252</td>
+                <td>36</td>
+                <td>14</td>
+                <td>65</td>
+            </tr>
+        </table>
+
+        <!-- Signature representation -->
+        <div class="signature">
+            <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 10 40 C 20 20, 30 10, 40 30 C 50 50, 40 60, 50 40 C 60 20, 70 30, 80 40 C 90 50, 100 20, 110 30" 
+                      stroke="#1a2a40" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+
+    <!-- Graph Section -->
+    <div class="graph-section">
+        <h2>Digital Plots</h2>
+        
+        <div style="margin-bottom: 50px;">
+            <h3 style="text-align: center; font-family: Arial, sans-serif; color: #333; font-size: 18px;">Voltage vs Current</h3>
+            <canvas id="rlcChart"></canvas>
+        </div>
+
+        <div>
+            <h3 style="text-align: center; font-family: Arial, sans-serif; color: #333; font-size: 18px;">Power vs Current</h3>
+            <canvas id="powerChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Chart Initialization
+        const ctx = document.getElementById('rlcChart').getContext('2d');
+        const ctxPower = document.getElementById('powerChart').getContext('2d');
+        
+        // Data extracted from the observation table
+        const currentData = [0.164, 0.189, 0.252]; 
+        const supplyVoltage = [52.0, 60.0, 80.0];
+        const voltageResistor = [23, 27, 36];
+        const voltageInductor = [7, 10, 14];
+        const voltageCapacitor = [41, 47, 65];
+
+        // Calculated Power Data
+        const realPower = voltageResistor.map((vr, i) => parseFloat((vr * currentData[i]).toFixed(2)));
+        const apparentPower = supplyVoltage.map((vs, i) => parseFloat((vs * currentData[i]).toFixed(2)));
+        const reactivePower = voltageInductor.map((vl, i) => parseFloat((Math.abs(vl - voltageCapacitor[i]) * currentData[i]).toFixed(2)));
+
+        const rlcChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: currentData,
+                datasets: [
+                    {
+                        label: 'Supply Voltage (V)',
+                        data: supplyVoltage,
+                        borderColor: '#2c3e50',
+                        backgroundColor: '#2c3e50',
+                        fill: false,
+                        tension: 0.1,
+                        marker: 'circle'
+                    },
+                    {
+                        label: 'Voltage across Resistor (VR)',
+                        data: voltageResistor,
+                        borderColor: '#e74c3c', 
+                        backgroundColor: '#e74c3c',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Voltage across Inductor (VL)',
+                        data: voltageInductor,
+                        borderColor: '#3498db', 
+                        backgroundColor: '#3498db',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Voltage across Capacitor (VC)',
+                        data: voltageCapacitor,
+                        borderColor: '#2ecc71', 
+                        backgroundColor: '#2ecc71',
+                        fill: false,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Current (Amperes)',
+                            font: { weight: 'bold' }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Voltage (Volts)',
+                            font: { weight: 'bold' }
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Initialize Power Chart
+        const powerChart = new Chart(ctxPower, {
+            type: 'line',
+            data: {
+                labels: currentData,
+                datasets: [
+                    {
+                        label: 'Apparent Power S (VA)',
+                        data: apparentPower,
+                        borderColor: '#8e44ad',
+                        backgroundColor: '#8e44ad',
+                        fill: false,
+                        tension: 0.1,
+                        marker: 'circle'
+                    },
+                    {
+                        label: 'Real Power P (W)',
+                        data: realPower,
+                        borderColor: '#e67e22',
+                        backgroundColor: '#e67e22',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Reactive Power Q (VAR)',
+                        data: reactivePower,
+                        borderColor: '#16a085',
+                        backgroundColor: '#16a085',
+                        fill: false,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Current (Amperes)',
+                            font: { weight: 'bold' }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Power (W, VA, VAR)',
+                            font: { weight: 'bold' }
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
