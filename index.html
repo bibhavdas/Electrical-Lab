@@ -34,6 +34,7 @@
             padding: 40px 20px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
 
         h1 { margin: 0; font-weight: 300; letter-spacing: 2px; }
@@ -123,6 +124,7 @@
 
         .bg-exp1 { background: linear-gradient(135deg, #f1c40f, #f39c12); } /* Yellow/Orange */
         .bg-exp2 { background: linear-gradient(135deg, #e74c3c, #c0392b); } /* Red */
+        .bg-exp3 { background: linear-gradient(135deg, #2ecc71, #27ae60); } /* Green */
         
         .bg-pdf { background: linear-gradient(135deg, #95a5a6, #7f8c8d); } /* Grey for PDFs */
 
@@ -186,7 +188,7 @@
     <div id="digital" class="container active">
         
         <!-- Exp 1 Link -->
-        <a href="experiment 1.html" class="card">
+        <a href="index.html" class="card">
             <div class="card-header bg-exp1">
                 <i class="fa-regular fa-lightbulb"></i>
             </div>
@@ -217,13 +219,28 @@
             </div>
         </a>
 
+        <!-- Exp 3 Link -->
+        <a href="experiment 3.html" class="card">
+            <div class="card-header bg-exp3">
+                <i class="fa-solid fa-wave-square"></i>
+            </div>
+            <div class="card-body">
+                <div class="exp-number">Experiment 03</div>
+                <h3 class="exp-title">RLC Series Circuit</h3>
+                <p class="exp-desc">Study the voltage drops, current, and power characteristics of an RLC series circuit with interactive graphs.</p>
+                <div class="card-footer">
+                    <span>Open Interactive Lab</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+        </a>
+
     </div>
 
     <!-- TAB 2: RAW (PDF) EXPERIMENTS -->
     <div id="raw" class="container">
         
         <!-- Exp 1 PDF -->
-        <!-- Note: Ensure you have a file named 'exp1.pdf' in the folder, or change href below -->
         <a href="exp1.pdf" target="_blank" class="card">
             <div class="card-header bg-pdf">
                 <i class="fa-solid fa-file-contract"></i>
@@ -240,7 +257,6 @@
         </a>
 
         <!-- Exp 2 PDF -->
-        <!-- Note: Ensure you have a file named 'exp2.pdf' in the folder, or change href below -->
         <a href="exp2.pdf" target="_blank" class="card">
             <div class="card-header bg-pdf">
                 <i class="fa-solid fa-file-contract"></i>
@@ -249,6 +265,22 @@
                 <div class="exp-number">Experiment 02</div>
                 <h3 class="exp-title">Filament Lamps (Raw Scan)</h3>
                 <p class="exp-desc">Original handwritten lab manual scan for Tungsten and Carbon lamp experiment.</p>
+                <div class="card-footer">
+                    <span>View PDF</span>
+                    <i class="fa-solid fa-download"></i>
+                </div>
+            </div>
+        </a>
+
+        <!-- Exp 3 PDF -->
+        <a href="exp3.pdf" target="_blank" class="card">
+            <div class="card-header bg-pdf">
+                <i class="fa-solid fa-file-contract"></i>
+            </div>
+            <div class="card-body">
+                <div class="exp-number">Experiment 03</div>
+                <h3 class="exp-title">RLC Series Circuit (Raw Scan)</h3>
+                <p class="exp-desc">Original handwritten lab manual scan for the RLC series circuit experiment.</p>
                 <div class="card-footer">
                     <span>View PDF</span>
                     <i class="fa-solid fa-download"></i>
@@ -269,7 +301,6 @@
             document.getElementById(tabName).classList.add('active');
             
             // Activate selected button
-            // Find the button that called this function based on onclick attribute text match
             const btns = document.querySelectorAll('.tab-btn');
             if(tabName === 'digital') btns[0].classList.add('active');
             if(tabName === 'raw') btns[1].classList.add('active');
