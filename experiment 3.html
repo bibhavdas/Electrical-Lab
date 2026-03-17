@@ -421,6 +421,25 @@
             </tr>
         </table>
 
+        <div class="table-title" style="margin-top: 20px;">Find out the value with Unit:</div>
+        <table>
+            <tr>
+                <th>Resistance<br>(R)</th>
+                <th>Inductor<br>(L)</th>
+                <th>Capacitor<br>(C)</th>
+                <th>Phase Angle<br>(Ø)</th>
+                <th>Power<br>Factor(COSØ)</th>
+            </tr>
+            <tr>
+                <td>142.0 Ω</td>
+                <td>0.16 H</td>
+                <td>12.6 µF</td>
+                <td>-54.8°</td>
+                <td>0.58</td>
+            </tr>
+        </table>
+        <p style="font-size: 18px; color: #1a2a40; margin-left: 10px; opacity: 0.8;">* Calculated as the average of the 3 observations (assuming f = 50Hz).</p>
+
         <!-- Signature representation -->
         <div class="signature">
             <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg">
@@ -433,23 +452,13 @@
 
     <!-- Graph Section -->
     <div class="graph-section">
-        <h2>Digital Plots</h2>
-        
-        <div style="margin-bottom: 50px;">
-            <h3 style="text-align: center; font-family: Arial, sans-serif; color: #333; font-size: 18px;">Voltage vs Current</h3>
-            <canvas id="rlcChart"></canvas>
-        </div>
-
-        <div>
-            <h3 style="text-align: center; font-family: Arial, sans-serif; color: #333; font-size: 18px;">Power vs Current</h3>
-            <canvas id="powerChart"></canvas>
-        </div>
+        <h2>Digital Plot: Voltage vs Current</h2>
+        <canvas id="rlcChart"></canvas>
     </div>
 
     <script>
         // Chart Initialization
         const ctx = document.getElementById('rlcChart').getContext('2d');
-        const ctxPower = document.getElementById('powerChart').getContext('2d');
         
         // Data extracted from the observation table
         const currentData = [0.164, 0.189, 0.252]; 
@@ -457,11 +466,6 @@
         const voltageResistor = [23, 27, 36];
         const voltageInductor = [7, 10, 14];
         const voltageCapacitor = [41, 47, 65];
-
-        // Calculated Power Data
-        const realPower = voltageResistor.map((vr, i) => parseFloat((vr * currentData[i]).toFixed(2)));
-        const apparentPower = supplyVoltage.map((vs, i) => parseFloat((vs * currentData[i]).toFixed(2)));
-        const reactivePower = voltageInductor.map((vl, i) => parseFloat((Math.abs(vl - voltageCapacitor[i]) * currentData[i]).toFixed(2)));
 
         const rlcChart = new Chart(ctx, {
             type: 'line',
@@ -523,67 +527,6 @@
                         title: {
                             display: true,
                             text: 'Voltage (Volts)',
-                            font: { weight: 'bold' }
-                        },
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Initialize Power Chart
-        const powerChart = new Chart(ctxPower, {
-            type: 'line',
-            data: {
-                labels: currentData,
-                datasets: [
-                    {
-                        label: 'Apparent Power S (VA)',
-                        data: apparentPower,
-                        borderColor: '#8e44ad',
-                        backgroundColor: '#8e44ad',
-                        fill: false,
-                        tension: 0.1,
-                        marker: 'circle'
-                    },
-                    {
-                        label: 'Real Power P (W)',
-                        data: realPower,
-                        borderColor: '#e67e22',
-                        backgroundColor: '#e67e22',
-                        fill: false,
-                        tension: 0.1
-                    },
-                    {
-                        label: 'Reactive Power Q (VAR)',
-                        data: reactivePower,
-                        borderColor: '#16a085',
-                        backgroundColor: '#16a085',
-                        fill: false,
-                        tension: 0.1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Current (Amperes)',
-                            font: { weight: 'bold' }
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Power (W, VA, VAR)',
                             font: { weight: 'bold' }
                         },
                         beginAtZero: true
