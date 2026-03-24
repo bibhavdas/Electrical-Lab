@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electrical Lab Portal</title>
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -125,6 +124,7 @@
         .bg-exp1 { background: linear-gradient(135deg, #f1c40f, #f39c12); } /* Yellow/Orange */
         .bg-exp2 { background: linear-gradient(135deg, #e74c3c, #c0392b); } /* Red */
         .bg-exp3 { background: linear-gradient(135deg, #2ecc71, #27ae60); } /* Green */
+        .bg-exp4 { background: linear-gradient(135deg, #9b59b6, #8e44ad); } /* Purple */
         
         .bg-pdf { background: linear-gradient(135deg, #95a5a6, #7f8c8d); } /* Grey for PDFs */
 
@@ -174,7 +174,6 @@
         <div class="subtitle">Virtual & Raw Experiment Archives</div>
     </header>
 
-    <!-- Navigation Tabs -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('digital')">
             <i class="fa-solid fa-laptop-code"></i> Digital Experiments
@@ -184,10 +183,8 @@
         </button>
     </div>
 
-    <!-- TAB 1: DIGITAL EXPERIMENTS -->
     <div id="digital" class="container active">
         
-        <!-- Exp 1 Link -->
         <a href="index.html" class="card">
             <div class="card-header bg-exp1">
                 <i class="fa-regular fa-lightbulb"></i>
@@ -203,7 +200,6 @@
             </div>
         </a>
 
-        <!-- Exp 2 Link -->
         <a href="experiment 2.html" class="card">
             <div class="card-header bg-exp2">
                 <i class="fa-solid fa-fire-burner"></i>
@@ -219,7 +215,6 @@
             </div>
         </a>
 
-        <!-- Exp 3 Link -->
         <a href="experiment 3.html" class="card">
             <div class="card-header bg-exp3">
                 <i class="fa-solid fa-wave-square"></i>
@@ -235,12 +230,25 @@
             </div>
         </a>
 
+        <a href="experiment 4.html" class="card">
+            <div class="card-header bg-exp4">
+                <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <div class="card-body">
+                <div class="exp-number">Experiment 04</div>
+                <h3 class="exp-title">RLC Parallel Circuit</h3>
+                <p class="exp-desc">Study the current across individual components, total circuit current, and power factor in an AC parallel circuit.</p>
+                <div class="card-footer">
+                    <span>Open Interactive Lab</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+        </a>
+
     </div>
 
-    <!-- TAB 2: RAW (PDF) EXPERIMENTS -->
     <div id="raw" class="container">
         
-        <!-- Exp 1 PDF -->
         <a href="exp1.pdf" target="_blank" class="card">
             <div class="card-header bg-pdf">
                 <i class="fa-solid fa-file-contract"></i>
@@ -256,7 +264,6 @@
             </div>
         </a>
 
-        <!-- Exp 2 PDF -->
         <a href="exp2.pdf" target="_blank" class="card">
             <div class="card-header bg-pdf">
                 <i class="fa-solid fa-file-contract"></i>
@@ -272,7 +279,6 @@
             </div>
         </a>
 
-        <!-- Exp 3 PDF -->
         <a href="exp3.pdf" target="_blank" class="card">
             <div class="card-header bg-pdf">
                 <i class="fa-solid fa-file-contract"></i>
@@ -281,6 +287,21 @@
                 <div class="exp-number">Experiment 03</div>
                 <h3 class="exp-title">RLC Series Circuit (Raw Scan)</h3>
                 <p class="exp-desc">Original handwritten lab manual scan for the RLC series circuit experiment.</p>
+                <div class="card-footer">
+                    <span>View PDF</span>
+                    <i class="fa-solid fa-download"></i>
+                </div>
+            </div>
+        </a>
+
+        <a href="exp4.pdf" target="_blank" class="card">
+            <div class="card-header bg-pdf">
+                <i class="fa-solid fa-file-contract"></i>
+            </div>
+            <div class="card-body">
+                <div class="exp-number">Experiment 04</div>
+                <h3 class="exp-title">RLC Parallel Circuit (Raw Scan)</h3>
+                <p class="exp-desc">Original handwritten lab manual scan for the RLC parallel circuit experiment.</p>
                 <div class="card-footer">
                     <span>View PDF</span>
                     <i class="fa-solid fa-download"></i>
