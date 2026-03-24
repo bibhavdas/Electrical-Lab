@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Experiment: RLC Parallel Circuit</title>
+    <style>
+        /* Lab Notebook Background */
+        body {
+            background-color: #f9f9f9;
+            background-image: linear-gradient(#e5e7eb 1px, transparent 1px), 
+                              linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1f2937;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Page Container */
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 40px 50px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-left: 3px solid #ef4444; /* Notebook margin line */
+            border-radius: 4px;
+        }
+
+        h1, h2 {
+            color: #111827;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        h1 { font-size: 24px; text-align: center; border: none; }
+        h2 { font-size: 20px; }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+        }
+        
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 10px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .math {
+            font-family: "Courier New", Courier, monospace;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Study of RLC Parallel Circuit</h1>
+
+        <h2>Objective</h2>
+        <p>To measure the current across individual components, total circuit current &amp; power factor.</p>
+
+        <h2>Theory</h2>
+        <p>The three components are joined in parallel across an AC Supply of rms voltage V.</p>
+        <ul>
+            <li><span class="math">V<sub>R</sub> = I &times; R</span></li>
+            <li><span class="math">V<sub>L</sub> = I &times; X<sub>L</sub></span>, where <span class="math">X<sub>L</sub> = 2&pi;fL</span></li>
+            <li><span class="math">V<sub>C</sub> = I &times; X<sub>C</sub></span>, where <span class="math">X<sub>C</sub> = 1 / 2&pi;fC</span></li>
+            <li>Its phase angle is <span class="math">tan<sup>-1</sup>[(X<sub>L</sub> - X<sub>C</sub>)/R]</span>.</li>
+        </ul>
+
+        <h2>Components Under Test</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl.</th>
+                    <th>Component</th>
+                    <th>Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>Resistor</td><td>1</td></tr>
+                <tr><td>2</td><td>Capacitor</td><td>1</td></tr>
+                <tr><td>3</td><td>Inductor</td><td>1</td></tr>
+            </tbody>
+        </table>
+
+        <h2>Instruments Required</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl.</th>
+                    <th>Instrument</th>
+                    <th>Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>Voltmeter</td><td>1</td></tr>
+                <tr><td>2</td><td>Ammeter</td><td>4</td></tr>
+                <tr><td>3</td><td>Variac</td><td>1</td></tr>
+            </tbody>
+        </table>
+
+        <h2>Precautions</h2>
+        <ol>
+            <li>All the ammeters should be taken in proper range.</li>
+            <li>Before connecting the meter in the circuits check their zero settings.</li>
+            <li>The current and voltage are noted when values settle to a steady value.</li>
+            <li>All joints should be tightly connected.</li>
+            <li>Voltage should not exceed 210V.</li>
+            <li>Supply is switched OFF after the experiment is over.</li>
+        </ol>
+
+        <h2>Procedure</h2>
+        <ol>
+            <li>The circuit is made in the circuit diagram.</li>
+            <li>The Variac should be kept in zero voltage position, the AC supply is switched on.</li>
+            <li>The applied voltage is varied using the variac &amp; corresponding value of voltage &amp; current are noted.</li>
+            <li>The readings of various voltages are tabulated till rated voltage (210V) of components is reached.</li>
+            <li>The steps should be repeated at least three times.</li>
+        </ol>
+
+        <h2>Observation Table (Raw Readings)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl no.</th>
+                    <th>Supply voltage</th>
+                    <th>Current</th>
+                    <th>Current through resistor</th>
+                    <th>Current through inductor</th>
+                    <th>Current through capacitor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>30.8 V</td>
+                    <td>1.097 A</td>
+                    <td>0.113 A</td>
+                    <td>0.059 A</td>
+                    <td>0.325 A</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>50.5 V</td>
+                    <td>0.346 A</td>
+                    <td>0.189 A</td>
+                    <td>0.098 A</td>
+                    <td>0.659 A</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>50.7 V</td>
+                    <td>0.758 A</td>
+                    <td>0.152 A</td>
+                    <td>0.073 A</td>
+                    <td>0.527 A</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Final Computed Values</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                    <th>Unit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Resistance</td>
+                    <td>267.793</td>
+                    <td>&Omega; (Ohms)</td>
+                </tr>
+                <tr>
+                    <td>Capacitor</td>
+                    <td>76.6</td>
+                    <td>&micro;F (Microfarads)</td>
+                </tr>
+                <tr>
+                    <td>Inductor</td>
+                    <td>512.81</td>
+                    <td>&Omega; (Ohms)</td>
+                </tr>
+                <tr>
+                    <td>Phase angle</td>
+                    <td>2.92</td>
+                    <td>Degrees (&deg;)</td>
+                </tr>
+                <tr>
+                    <td>Power factor</td>
+                    <td>0.216</td>
+                    <td>None (Unitless)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Conclusion</h2>
+        <p>The experiment to study the RLC parallel circuit was successfully conducted. The currents across the individual components (resistor, inductor, and capacitor) and the total circuit current were measured and recorded for varying supply voltages. Using these readings, the values of the components were calculated, yielding a resistance of 267.793 &Omega;, a capacitance of 76.6 &micro;F, and an inductive reactance of 512.81 &Omega;. Furthermore, the phase angle was determined to be 2.32&deg;, resulting in an overall circuit power factor of 0.216. These results successfully demonstrate the current distribution and phase relationships of RLC components connected in parallel across an AC supply.</p>
+    </div>
+
+</body>
+</html>
